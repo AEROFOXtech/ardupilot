@@ -30,9 +30,12 @@ The AEROFOX-H7 is a flight controller produced by AEROFOX(http://aerofox.cn)
         4x ADC input
 
     FPC connector
-        The connector includes an SPI, an I2C, an PWM IMU heating control pin. Firmware
+        The conneimgctor includes an SPI, an I2C, an PWM IMU heating control pin. Firmware
         already includes drivers for ADIS16470, ICM45686, IMU heating, RM3100. It is
         automatically identify after installation。
+
+## Pinout
+<img src="AEROFOX-H7_pinout.png" alt="" width="800">
 
 ## UART Mapping
 
