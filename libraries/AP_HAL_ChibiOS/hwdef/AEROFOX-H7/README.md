@@ -30,50 +30,44 @@ The AEROFOX-H7 is a flight controller produced by AEROFOX(http://aerofox.cn)
         4x ADC input
 
     FPC connector
-        The conneimgctor includes an SPI, an I2C, an PWM IMU heating control pin. Firmware
-        already includes drivers for ADIS16470, ICM45686, IMU heating, RM3100. It is
-        automatically identify after installation。
+        The connector includes an SPI, an I2C, an PWM IMU heating control pin.
 
 ## Pinout
 <img src="AEROFOX-H7_pinout.png" alt="" width="800">
 
 ## UART Mapping
 
-- SERIAL0 -> USB
-- SERIAL1 -> UART7
-- SERIAL2 -> UART4
-- SERIAL3 -> UART5
-- SERIAL4 -> USART2
-- SERIAL5 -> USART1 GPS
-- SERIAL6 -> UART8 TELEM
-- SERIAL7 -> USART3 RCIN
+All UARTs, except UART1, are DMA enabled. UART corresponding to each SERIAL port, and its default protocol, are shown below:
+- SERIAL0 -> USB (MAVLink2)
+- SERIAL1 -> UART7 (ESC Telemetry)
+- SERIAL2 -> UART4 (User configured)
+- SERIAL3 -> UART5 (User configured)
+- SERIAL4 -> USART2 (User configured)
+- SERIAL5 -> USART1 (GPS)
+- SERIAL6 -> UART8 (MAVLink2)
+- SERIAL7 -> USART3 (RCIN)
 
 ## RC Input
 
-No special interface for RCIN is designed because any SERIAL interface can be used as
-an RC input.
+SERIAL 7 is configured for RC input by default and is compatible with all ArduPilot supported protocols except PPM. For protocols requiring half-duplex serial to transmit telemetry (such as FPort) you should set SERAIL7_OPTIONS = 4 (Half-Duplex)
 
 ## PWM Output
 
-The AEROFOXH7 support up to 16PWM outputs. All pins support Dshot. Outputs 1-8
-supports STM32 native encoder mode and can input 4 groups of AB encoder signals simultaneously.
+The AEROFOXH7 support up to 16PWM outputs. All pins support DShot. Outputs 1-8 support bi-directional DShot.
 
-- PWM1 TIM2_CH1 encoder mode
-- PWM2 TIM2_CH2 encoder mode
-- PWM3 TIM1_CH1 encoder mode
-- PWM4 TIM1_CH2 encoder mode
-- PWM5 TIM4_CH1 encoder mode
-- PWM6 TIM4_CH2 encoder mode
-- PWM7 TIM3_CH1 encoder mode
-- PWM8 TIM3_CH2 encoder mode
-- PWM9 TIM15_CH1
-- PWM10 TIM15_CH2
-- PWM11 TIM14_CH1
-- PWM12 TIM13_CH1
-- PWM13 TIM8_CH4
-- PWM14 TIM8_CH3
-- PWM15 TIM12_CH2
-- PWM16 TIM12_CH1
+The 16 PWM outputs are in 9 groups:
+
+- PWM 1,2 in group1
+- PWM 3,4  in group2
+- PWM 5,6  in group3
+- PWM 7,8 in group4
+- PWM 9,10  in group5
+- PWM 11  in group6
+- PWM 12 in group7
+- PWM 13,14 in group8
+- PWM 15,16 in group9
+
+Channels within the same group need to use the same output rate. If any channel in a group uses DShot, then all channels in that group need to use DShot.
 
 ## Battery Monitoring
 
@@ -81,6 +75,7 @@ The board has a builting voltage and current sensor. The voltage sensor can hand
 to 12S LiPo batteries.
 
 ### The power A is onboard voltage sensor
+It is enabled by default and has the following parameters set by default:
 - BATT_MONITOR 4
 - BATT_VOLT_PIN 19
 - BATT_CURR_PIN 9
@@ -92,13 +87,11 @@ to 12S LiPo batteries.
 - BATT_VOLT_PIN 10
 - BATT_CURR_PIN 11
 - BATT_VOLT_MULT 34
-- BATT_AMP_PERVLT 60
+- BATT_AMP_PERVLT should be set as required by the specific monitor used
 
 ## Compass
 
-A 5883L compass is installed inside the H7 flight control. When high current devices such
-as ESC and BEC are installed under the flight control board, the on-board compass
-needs to be disabled.
+A 5883L compass is installed inside the H7 flight control. When high current devices such as ESC and BEC are installed under the flight control board, the on-board compass is usually disabled and an external compass used mounted to minimize motor current effects.
 
 ## Loading Firmware
 The board comes pre-installed with an ArduPilot compatible bootloader, allowing the
